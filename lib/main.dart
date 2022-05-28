@@ -1,4 +1,6 @@
 import "package:flutter/material.dart";
+import "./question.dart";
+import "./answer.dart";
 
 void main() {
   runApp(MyApp());
@@ -10,47 +12,53 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  var questionIndex = 0;
-
-  void answerQuestion() {
+  final questions = const [
+    {
+      'questionText': "What's your favorite Color?",
+      'answers': ["Red", "Black", "Grey", "Pink", "Green"]
+    },
+    {
+      'questionText': "What's your favorite Animal?",
+      'answers': ["Rabbit", "Snake", "Lion", "Cat", "Dog"]
+    },
+    {
+      'questionText': "What's your favorite Instructor?",
+      'answers': ["DG seller", "Pipeline", "Martin", "Kaferas", "Chriss"]
+    }
+  ];
+  var _questionIndex = 0;
+  void _answerQuestion() {
     setState(() {
-      questionIndex++;
+      _questionIndex = _questionIndex++;
     });
-    print(questionIndex);
+    print(_questionIndex);
+    if (_questionIndex < questions.length) {
+      print("We have more questions just wait");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var questions = [
-      "What's your favorite Color",
-      "What's your favorite Fruit",
-      "What's your favorite Animal",
-    ];
     return MaterialApp(
-        home: Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.deepOrangeAccent,
-        title: Text("TycoonNet"),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            Text(questions[questionIndex]),
-            RaisedButton(child: Text('Answer 1'), onPressed: answerQuestion),
-            RaisedButton(child: Text('Answer 2'), onPressed: answerQuestion),
-            RaisedButton(child: Text('Answer 3'), onPressed: answerQuestion),
-          ],
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.deepOrangeAccent,
+          title: Text("QuestionResponse"),
+        ),
+        body: Center(
+          child: Column(
+            children: [
+              Question(
+                questionText: questions[_questionIndex]['questionText'],
+              ),
+              ...(questions[_questionIndex]['answers'] as List<String>)
+                  .map((answer) {
+                return Answer(_answerQuestion, answer);
+              }).toList()
+            ],
+          ),
         ),
       ),
-      bottomNavigationBar: Row(children: [
-        FloatingActionButton(
-            onPressed: () => {print("There is something Choosen")},
-            backgroundColor: Colors.brown),
-        FloatingActionButton(
-            onPressed: () => {}, backgroundColor: Colors.amber),
-        FloatingActionButton(
-            onPressed: () => {}, backgroundColor: Colors.green),
-      ]),
-    ));
+    );
   }
 }
